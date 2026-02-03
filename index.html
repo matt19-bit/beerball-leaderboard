@@ -26,7 +26,7 @@
       position: relative;
       width: 100%;
       height: 160px;
-      background-color: #333; /* Default color before banner art is bought */
+      background-color: rgb(255, 22, 22); /* Default red color for "Champion" */
       text-align: center;
     }
     .banner-img {
@@ -179,7 +179,9 @@
 <body>
   <div class="player-card tier-champion">
     <!-- Top: Banner + Face + Player Name -->
-    <div class="banner" style="background-color: rgb(255,22,22);">
+    <div class="banner">
+      <!-- Placeholder for Banner Art -->
+      <img src="https://via.placeholder.com/300x160" alt="Banner Art" class="banner-img"/>
       <div class="player-name">
         <span>Matt Latour</span>
       </div>
@@ -188,7 +190,8 @@
         <span class="team-name" style="color: rgb(255,22,22);">Yin & Yang</span> <!-- Team with color -->
       </div>
       <div class="face">
-        <img src="player-face.jpg" alt="Player Face" class="face-img"/>
+        <!-- Placeholder for Player Face -->
+        <img src="https://via.placeholder.com/100" alt="Player Face" class="face-img"/>
       </div>
     </div>
 
@@ -222,12 +225,14 @@
 
     <!-- Customizable Badges Section (Purple) -->
     <div class="badges" style="background: rgba(255, 255, 255, 0.1);">
+      <!-- Placeholder for badges -->
       <div class="badge">Champion Badge</div>
       <div class="badge">Godly Badge</div>
     </div>
 
     <!-- Rank Badge (Green) -->
     <div class="rank-badge">
+      <!-- Placeholder for rank icon -->
       <img src="rank-badge-champion.jpg" alt="Rank Badge"/>
       <div class="rank-number">#1</div>
     </div>
