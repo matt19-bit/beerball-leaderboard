@@ -16,13 +16,17 @@
       overflow: hidden;
       position: relative;
       font-family: 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     /* Banner Section (customizable) */
     .banner {
       position: relative;
+      width: 100%;
       height: 160px;
-      background-color: #333;
+      background-color: #333; /* Default color before banner art is bought */
       text-align: center;
     }
     .banner-img {
@@ -48,16 +52,19 @@
       width: 100%;
       font-size: 14px;
       color: #b0b0b0;
+      text-align: center;
     }
 
     .clan-name {
       display: block;
       font-weight: bold;
+      color: #fff;
     }
 
     .team-name {
       font-style: italic;
       margin-top: 5px;
+      color: #fff;
     }
 
     /* Player Face */
@@ -80,6 +87,8 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      width: 100%;
+      box-sizing: border-box;
     }
     .stat {
       display: flex;
@@ -125,6 +134,7 @@
       display: flex;
       gap: 10px;
       justify-content: center;
+      width: 100%;
     }
     .badge {
       padding: 6px 12px;
@@ -157,32 +167,32 @@
 
     /* Tier Colors */
     .tier-champion { --tierA: #ffb000; --tierB: #b30000; --glow: rgba(255,140,0,.35); }
+    .tier-masters { --tierA: #9b4eeb; --tierB: #5f2c90; --glow: rgba(155,78,255,.3); }
     .tier-diamond { --tierA: #e8fbff; --tierB: #4cc9ff; --glow: rgba(80,200,255,.3); }
     .tier-platinum { --tierA: #00d5c8; --tierB: #0a6f77; --glow: rgba(0,213,200,.28); }
     .tier-gold { --tierA: #ffd34d; --tierB: #8a5a00; --glow: rgba(255,211,77,.26); }
     .tier-silver { --tierA: #cfd6dd; --tierB: #3a4652; --glow: rgba(207,214,221,.2); }
-    .tier-masters { --tierA: #9b4eeb; --tierB: #5f2c90; --glow: rgba(155,78,255,.3); }
+    .tier-bronze { --tierA: #d59a6f; --tierB: #5a2f18; --glow: rgba(213,154,111,.2); }
   </style>
 </head>
 
 <body>
-  <div class="player-card tier-masters">
+  <div class="player-card tier-champion">
     <!-- Top: Banner + Face + Player Name -->
-    <div class="banner">
-      <img src="player-banner.jpg" alt="Banner Art" class="banner-img"/>
+    <div class="banner" style="background-color: rgb(255,22,22);">
       <div class="player-name">
         <span>Matt Latour</span>
       </div>
       <div class="clan-team">
-        <span class="clan-name">Great Personality</span>
-        <span class="team-name">Yin & Yang</span>
+        <span class="clan-name" style="color: rgb(255,22,22);">Great Personality</span> <!-- Clan with color -->
+        <span class="team-name" style="color: rgb(255,22,22);">Yin & Yang</span> <!-- Team with color -->
       </div>
       <div class="face">
         <img src="player-face.jpg" alt="Player Face" class="face-img"/>
       </div>
     </div>
 
-    <!-- Stats Section -->
+    <!-- Stats Section (Yellow) -->
     <div class="stats">
       <div class="stat">
         <span class="stat-label">Wins</span>
@@ -210,21 +220,21 @@
       <div class="winrate-percentage">70.3%</div>
     </div>
 
-    <!-- Customizable Badges Section -->
-    <div class="badges">
+    <!-- Customizable Badges Section (Purple) -->
+    <div class="badges" style="background: rgba(255, 255, 255, 0.1);">
       <div class="badge">Champion Badge</div>
       <div class="badge">Godly Badge</div>
     </div>
 
-    <!-- Rank Badge in Bottom Right -->
+    <!-- Rank Badge (Green) -->
     <div class="rank-badge">
-      <img src="rank-badge.jpg" alt="Rank Badge"/>
+      <img src="rank-badge-champion.jpg" alt="Rank Badge"/>
       <div class="rank-number">#1</div>
     </div>
   </div>
 
   <script>
-    // Here’s where you’d fetch and dynamically load player data
+    // Dynamic Data Loading Example (mock)
     fetch("leaderboard.json")
       .then(r => r.json())
       .then(d => {
