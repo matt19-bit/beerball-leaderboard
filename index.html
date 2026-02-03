@@ -38,9 +38,11 @@
     .clan-team {
       font-size: 14px;
       color: #b0b0b0;
+      text-align: center;
     }
 
     .clan-name {
+      display: block;
       font-weight: bold;
     }
 
@@ -109,30 +111,10 @@
       background: rgba(0, 0, 0, 0.35);
     }
 
-    /* Rank Badge */
-    .rank-badge {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .rank-badge img {
-      width: 40px;
-      height: 40px;
-    }
-    .rank-number {
-      margin-left: 5px;
-      font-size: 14px;
-      font-weight: 800;
-      color: white;
-    }
-
     /* Right Side: Banner and Face */
     .right-side {
       flex: 1;
-      background-color: rgb(255, 22, 22); /* Default rank color (Champion red) */
+      background-color: rgb(255, 22, 22); /* Default red color for "Champion" */
       display: flex;
       flex-direction: column;
       justify-content: space-between;
