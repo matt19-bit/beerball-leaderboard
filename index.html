@@ -14,8 +14,17 @@ function Get-ClanStats($clan) {
         $totalGames += $player.games
     }
 
-    $winPercentage = if ($totalGames -gt 0) { [math]::round(($totalWins / $totalGames) * 100, 2) } else { 0 }
-    $averageElo = if ($playerCount -gt 0) { [math]::round($totalElo / $playerCount, 2) } else { 0 }
+    $winPercentage = if ($totalGames -gt 0) { 
+        [math]::round(($totalWins / $totalGames) * 100, 2) 
+    } else { 
+        0 
+    }
+
+    $averageElo = if ($playerCount -gt 0) { 
+        [math]::round($totalElo / $playerCount, 2) 
+    } else { 
+        0 
+    }
 
     return @{
         "Name" = $clan.name
