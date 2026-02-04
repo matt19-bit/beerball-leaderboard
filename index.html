@@ -258,6 +258,20 @@ function cardHTML(p){
   if(p.isClanLeader) badges.push(`<div class="badge leader">CLAN LEADER</div>`);
   if(p.hasBounty) badges.push(`<div class="badge bounty">BOUNTY</div>`);
   if(p.hasFlash) badges.push(`<div class="badge flash">⚡ FLASH</div>`);
+  let rankBadge = '';
+  if (p.tier === 'Crimson' || p.tier.includes('champ')) {
+    rankBadge = '<img src="Icons/champion.jpg" alt="Champion Badge" class="rank-badge" />';
+  } else if (p.tier === 'Diamond') {
+    rankBadge = '<img src="Icons/diamond.jpg" alt="Diamond Badge" class="rank-badge" />';
+  } else if (p.tier === 'Platinum') {
+    rankBadge = '<img src="Icons/platinum.jpg" alt="Platinum Badge" class="rank-badge" />';
+  } else if (p.tier === 'Gold') {
+    rankBadge = '<img src="Icons/gold.jpg" alt="Gold Badge" class="rank-badge" />';
+  } else if (p.tier === 'Silver') {
+    rankBadge = '<img src="Icons/silver.jpg" alt="Silver Badge" class="rank-badge" />';
+  } else if (p.tier === 'Bronze') {
+    rankBadge = '<img src="Icons/bronze.jpg" alt="Bronze Badge" class="rank-badge" />';
+  }
 
   return `
   <div class="player-card ${tierClass(p.tier)} ${p.hasFlash?'flash-on':''}"
