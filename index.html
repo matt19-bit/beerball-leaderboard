@@ -34,6 +34,7 @@
       font-size: 24px;
       font-weight: bold;
       color: white;
+      text-align: center;
     }
 
     .clan-team {
@@ -51,12 +52,12 @@
       font-style: italic;
     }
 
-    /* Badges Section (Placeholder) */
+    /* Badges Section (Positioned to form a triangle) */
     .badges {
       display: flex;
-      gap: 10px;
-      justify-content: center;
+      justify-content: space-between;
       margin-top: 20px;
+      width: 100%;
     }
 
     .badge {
@@ -69,14 +70,24 @@
       border-radius: 50%;
       font-weight: bold;
       color: white;
+      position: relative;
+    }
+
+    /* Position Badge 2 (centered) */
+    .badge-2 {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     /* Stats Section */
     .stats {
-      padding: 20px 0;
+      padding: 0 0 20px;
       display: flex;
       flex-direction: column;
       gap: 10px;
+      margin-top: 40px;
     }
 
     .stat {
@@ -94,9 +105,8 @@
       font-weight: bold;
     }
 
-    /* Win % Bar */
+    /* Win Rate Bar */
     .winrate {
-      margin-top: 10px;
       padding: 10px;
       display: flex;
       flex-direction: column;
@@ -104,6 +114,7 @@
     }
 
     .winrate-bar {
+      margin-top: 8px;
       height: 14px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.1);
@@ -134,6 +145,7 @@
       gap: 10px;
     }
 
+    /* Rank Badge */
     .rank-badge {
       width: 80px;
       height: 80px;
@@ -149,22 +161,14 @@
       height: 50px;
     }
 
-    /* For the Diamond, Champion, etc. Badge */
-    .badge-diamond {
-      background-color: rgb(0, 51, 153);
-    }
-    .badge-champion {
-      background-color: rgb(255, 22, 22);
-    }
-    .badge-gold {
-      background-color: rgb(255, 211, 77);
-    }
-    .badge-silver {
-      background-color: rgb(191, 191, 191);
-    }
-    .badge-platinum {
-      background-color: rgb(0, 213, 200);
-    }
+    /* Tier Colors */
+    .tier-champion { --tierA: #ffb000; --tierB: #b30000; --glow: rgba(255,140,0,.35); }
+    .tier-masters { --tierA: #9b4eeb; --tierB: #5f2c90; --glow: rgba(155,78,255,.3); }
+    .tier-diamond { --tierA: #e8fbff; --tierB: #4cc9ff; --glow: rgba(80,200,255,.3); }
+    .tier-platinum { --tierA: #00d5c8; --tierB: #0a6f77; --glow: rgba(0,213,200,.28); }
+    .tier-gold { --tierA: #ffd34d; --tierB: #8a5a00; --glow: rgba(255,211,77,.26); }
+    .tier-silver { --tierA: #cfd6dd; --tierB: #3a4652; --glow: rgba(207,214,221,.2); }
+    .tier-bronze { --tierA: #d59a6f; --tierB: #5a2f18; --glow: rgba(213,154,111,.2); }
   </style>
 </head>
 
@@ -172,7 +176,6 @@
   <div class="player-card">
     <!-- Left Side: Player Info and Stats -->
     <div class="left-side">
-      <!-- Player Info -->
       <div class="player-name">Matt Latour</div>
       <div class="clan-team">
         <span class="clan-name">Great Personality</span>
@@ -182,7 +185,7 @@
       <!-- Badges Section -->
       <div class="badges">
         <div class="badge">Badge 1</div>
-        <div class="badge">Badge 2</div>
+        <div class="badge badge-2">Badge 2</div>
         <div class="badge">Badge 3</div>
       </div>
 
@@ -217,7 +220,7 @@
 
     <!-- Right Side: Rank Badge -->
     <div class="right-side">
-      <div class="rank-badge badge-champion">
+      <div class="rank-badge">
         <img src="Icons/champion.jpg" alt="Rank Badge"/>
       </div>
       <div class="rank-number">#1</div>
