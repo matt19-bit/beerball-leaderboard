@@ -26,25 +26,39 @@
 
         .clan-section h2 {
             color: #007BFF;
+            display: inline-block;
+            margin-right: 10px;
         }
 
-        .clan-section ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .clan-section li {
-            padding: 5px;
-        }
-
-        img {
-            width: 100px;
-            height: 100px;
+        .clan-logo {
+            width: 50px;
+            height: 50px;
             object-fit: contain;
+            vertical-align: middle;
         }
 
         .player-list {
             margin-top: 15px;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .player-list li {
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        .player-name {
+            display: inline-block;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        img.rank-badge {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -55,51 +69,58 @@
 
     <script>
         // Fetch the leaderboard data from the JSON file
-  <script>
-    // Fetch the leaderboard data from the JSON file
-    fetch('leaderboard.json')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data); // Log the data to check if it's loaded correctly
-            let leaderboard = document.getElementById('leaderboard');
+        fetch('leaderboard.json')
+            .then(response => response.json())
+            .then(data => {
+                let leaderboard = document.getElementById('leaderboard');
 
-            // Clan logo filenames based on clan names
-            const clanLogos = {
-                "Great Personality": "Great Personality Logo.png",
-                "WANGHAF": "WANGHAF Logo.png",
-                "Beer Pressure": "Beer Pressure Logo.png",
-                "Six Eyes": "Six Eyes Logo.png"
-            };
+                // Clan logo filenames based on clan names
+                const clanLogos = {
+                    "Great Personality": "Great Personality Logo.png",
+                    "WANGHAF": "WANGHAF Logo.png",
+                    "Beer Pressure": "Beer Pressure Logo.png",
+                    "Six Eyes": "Six Eyes Logo.png"
+                };
 
-            // Iterate over the clans and display them
-            data.clans.forEach(clan => {
-                let clanSection = document.createElement('section');
-                clanSection.classList.add('clan-section');
+                // Rank badge filenames based on rank
+                const rankBadges = {
+                    "Champion": "champion.jpg",
+                    "Master": "master.jpg",
+                    "Diamond I": "diamond.jpg",
+                    "Diamond II": "diamond.jpg",
+                    "Diamond III": "diamond.jpg",
+                    "Platinum I": "platinum.jpg",
+                    "Platinum II": "platinum.jpg",
+                    "Gold II": "gold.jpg",
+                    "Gold III": "gold.jpg",
+                    "Silver I": "silver.jpg"
+                };
 
-                // Construct the logo path
-                let logoPath = `Icons/${clanLogos[clan.name]}`;
+                // Iterate over the clans and display them
+                data.clans.forEach(clan => {
+                    let clanSection = document.createElement('section');
+                    clanSection.classList.add('clan-section');
 
-                console.log("Logo Path:", logoPath); // Log the logo path to check if it's correct
+                    // Construct the logo path
+                    let logoPath = `Icons/${clanLogos[clan.name]}`;
 
-                clanSection.innerHTML = `
-                    <h2>${clan.name}</h2>
-                    <img src="${logoPath}" alt="${clan.name} Logo">
-                    <h3>Players</h3>
-                    <ul class="player-list">
-                        ${data.players.filter(player => player.clan === clan.name)
-                                      .map(player => `
-                                        <li>
-                                            <strong>${player.name}</strong> (Rank: ${player.rank})<br>
-                                            Elo: ${player.elo}, Wins: ${player.wins}, Games: ${player.games}
-                                        </li>`).join('')}
-                    </ul>
-                `;
-                leaderboard.appendChild(clanSection);
-            });
-        })
-        .catch(error => console.error('Error loading leaderboard data:', error));
-</script>
-
+                    clanSection.innerHTML = `
+                        <h2><img class="clan-logo" src="${logoPath}" alt="${clan.name} Logo">${clan.name}</h2>
+                        <h3>Players</h3>
+                        <ul class="player-list">
+                            ${data.players.filter(player => player.clan === clan.name)
+                                          .map(player => `
+                                            <li style="color: ${clan.color};">
+                                                <img class="rank-badge" src="Icons/${rankBadges[player.tier]}" alt="${player.tier} Badge">
+                                                <span class="player-name">${player.name}</span>
+                                            </li>`).join('')}
+                        </ul>
+                    `;
+                    leaderboard.appendChild(clanSection);
+                });
+            })
+            .catch(error => console.error('Error loading leaderboard data:', error));
+    </script>
 
 </body>
 </html>
