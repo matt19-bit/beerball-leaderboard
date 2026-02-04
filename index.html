@@ -55,46 +55,51 @@
 
     <script>
         // Fetch the leaderboard data from the JSON file
-        fetch('leaderboard.json')
-    .then(response => response.json())
-    .then(data => {
-        console.log(data); // Log the data to check if it's loaded correctly
-        let leaderboard = document.getElementById('leaderboard');
+  <script>
+    // Fetch the leaderboard data from the JSON file
+    fetch('leaderboard.json')
+        .then(response => response.json())
+        .then(data => {
+            console.log(data); // Log the data to check if it's loaded correctly
+            let leaderboard = document.getElementById('leaderboard');
 
-        // Clan logo filenames based on clan names
-        const clanLogos = {
-            "Great Personality": "Great Personality Logo.png",
-            "WANGHAF": "WANGHAF Logo.png",
-            "Beer Pressure": "Beer Pressure Logo.png",
-            "Six Eyes": "Six Eyes Logo.png"
-        };
+            // Clan logo filenames based on clan names
+            const clanLogos = {
+                "Great Personality": "Great Personality Logo.png",
+                "WANGHAF": "WANGHAF Logo.png",
+                "Beer Pressure": "Beer Pressure Logo.png",
+                "Six Eyes": "Six Eyes Logo.png"
+            };
 
-        // Iterate over the clans and display them
-        data.clans.forEach(clan => {
-            let clanSection = document.createElement('section');
-            clanSection.classList.add('clan-section');
+            // Iterate over the clans and display them
+            data.clans.forEach(clan => {
+                let clanSection = document.createElement('section');
+                clanSection.classList.add('clan-section');
 
-            // Construct the logo path
-            let logoPath = `Icons/${clanLogos[clan.name]}`;
+                // Construct the logo path
+                let logoPath = `Icons/${clanLogos[clan.name]}`;
 
-            clanSection.innerHTML = `
-                <h2>${clan.name}</h2>
-                <img src="${logoPath}" alt="${clan.name} Logo">
-                <h3>Players</h3>
-                <ul class="player-list">
-                    ${data.players.filter(player => player.clan === clan.name)
-                                  .map(player => `
-                                    <li>
-                                        <strong>${player.name}</strong> (Rank: ${player.rank})<br>
-                                        Elo: ${player.elo}, Wins: ${player.wins}, Games: ${player.games}
-                                    </li>`).join('')}
-                </ul>
-            `;
-            leaderboard.appendChild(clanSection);
-        });
-    })
-    .catch(error => console.error('Error loading leaderboard data:', error));
-    </script>
+                console.log("Logo Path:", logoPath); // Log the logo path to check if it's correct
+
+                clanSection.innerHTML = `
+                    <h2>${clan.name}</h2>
+                    <img src="${logoPath}" alt="${clan.name} Logo">
+                    <h3>Players</h3>
+                    <ul class="player-list">
+                        ${data.players.filter(player => player.clan === clan.name)
+                                      .map(player => `
+                                        <li>
+                                            <strong>${player.name}</strong> (Rank: ${player.rank})<br>
+                                            Elo: ${player.elo}, Wins: ${player.wins}, Games: ${player.games}
+                                        </li>`).join('')}
+                    </ul>
+                `;
+                leaderboard.appendChild(clanSection);
+            });
+        })
+        .catch(error => console.error('Error loading leaderboard data:', error));
+</script>
+
 
 </body>
 </html>
