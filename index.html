@@ -99,39 +99,9 @@
     <!-- Right Side: Rank Badge -->
     <div class="right-side">
       <div class="rank-badge">
-        <!-- Placeholder for dynamic rank badge -->
-        <img id="rankBadge" src="Icons/champion.jpg" alt="Rank Badge"/>
+        <img src="Icons/champion.jpg" alt="Rank Badge"/>
       </div>
     </div>
   </div>
-
-  <script>
-    // Example of dynamic player data
-    const playerData = {
-      name: "Matt Latour",
-      rank: "Champion", // This is dynamically determined, can change
-      clan: "Great Personality",
-      team: "Yin & Yang",
-      wins: 52,
-      losses: 22,
-      games: 74,
-      elo: 2550,
-      winRate: 70.3,
-    };
-
-    // Update the rank badge image based on the player's rank
-    document.querySelector('#rankBadge').src = `Icons/${playerData.rank.toLowerCase()}.jpg`;
-
-    // Update other player information dynamically
-    document.querySelector('.player-name').textContent = playerData.name;
-    document.querySelector('.clan-name').textContent = playerData.clan;
-    document.querySelector('.team-name').textContent = playerData.team;
-    document.querySelector('.stat-value:nth-child(1)').textContent = playerData.games;
-    document.querySelector('.stat-value:nth-child(2)').textContent = playerData.wins;
-    document.querySelector('.stat-value:nth-child(3)').textContent = playerData.losses;
-    document.querySelector('.stat-value:nth-child(4)').textContent = playerData.elo;
-    document.querySelector('.winrate-percentage').textContent = `${playerData.winRate}%`;
-    document.querySelector('.bar-fill').style.width = `${playerData.winRate}%`;
-  </script>
 </body>
 </html>
