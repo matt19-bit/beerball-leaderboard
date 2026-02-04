@@ -131,42 +131,55 @@
                     "Silver II": "silver.png" // Same badge for Silver I and II
                 };
 
-                // Function to calculate the clan's stats
-                function getClanStats(clanName) {
-                    let totalElo = 0;
-                    let totalWins = 0;
-                    let totalGames = 0;
-                    let totalLosses = 0;
-                    let mvp = null;
-                    let highestWinPercentage = 0;
+              // Function to calculate the clan's stats
+	      function getClanStats(clanName) {
+   		 let totalElo = 0;
+    		 let totalWins = 0;
+    		 let totalGames = 0;
+    		 let totalLosses = 0;
+   		 let mvp = null;
+   		 let highestMVPScore = 0;
 
-                    data.players.filter(player => player.clan === clanName).forEach(player => {
-                        totalElo += player.elo;
-                        totalWins += player.wins;
-                        totalGames += player.games;
-                        totalLosses += player.losses;
+   		 data.players.filter(player => player.clan === clanName).forEach(player => {
+       			 totalElo += player.elo;
+       			 totalWins += player.wins;
+      		  	 totalGames += player.games;
+        		 totalLosses += player.losses;
 
-                        // Calculate win percentage
-                        let winPercentage = (player.games > 0) ? (player.wins / player.games) * 100 : 0;
-                        if (winPercentage > highestWinPercentage) {
-                            highestWinPercentage = winPercentage;
-                            mvp = player.name; // Update MVP based on highest win percentage
-                        }
-                    });
+              // Calculate win percentage
+              let winPercentage = (player.games > 0) ? (player.wins / player.games) * 100 : 0;
 
-                    const averageElo = totalGames > 0 ? (totalElo / totalGames).toFixed(2) : 0;
-                    const winPercentage = totalGames > 0 ? ((totalWins / totalGames) * 100).toFixed(2) : 0;
+              // Add weighting based on number of games played
+              let gamesPlayedWeight = player.games > 5 ? 1 : (player.games / 5); // Weight is 1 for players with 5 or more games, otherwise scaled
+              let mvpScore = (winPercentage * gamesPlayedWeight);
 
-                    return {
-                        totalElo,
-                        averageElo,
-                        totalGames,
-                        totalWins,
-                        totalLosses,
-                        winPercentage,
-                        mvp
-                    };
-                }
+              // Log player stats and calculated MVP score
+              console.log(`${player.name} - Win %: ${winPercentage.toFixed(2)} (Wins: ${player.wins}, Games: ${player.games}), MVP Score:         ${mvpScore.toFixed(2)}`);
+
+              // Update MVP if this player has a higher score
+              if (mvpScore > highestMVPScore) {
+              	highestMVPScore = mvpScore;
+              	mvp = player.name; // Update MVP based on highest score
+              	}
+              });
+
+    	      const averageElo = totalGames > 0 ? (totalElo / totalGames).toFixed(2) : 0;
+   	      const winPercentage = totalGames > 0 ? ((totalWins / totalGames) * 100).toFixed(2) : 0;
+
+ 	      // Log final MVP selection
+ 	      console.log(`MVP for ${clanName}: ${mvp} with MVP Score: ${highestMVPScore.toFixed(2)}`);
+
+   	      return {
+      	      totalElo,
+      	      averageElo,
+      	      totalGames,
+      	      totalWins,
+      	      totalLosses,
+     	      winPercentage,
+     	      mvp
+    	      };
+	 }
+
 
                 // Iterate over the clans and display them
                 data.clans.forEach(clan => {
