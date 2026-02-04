@@ -3,9 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leaderboard</title>
+    <title>Clan Leaderboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .clan-section {
+            background-color: #fff;
+            margin: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .clan-section h2 {
+            color: #007BFF;
+        }
+
+        .clan-section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .clan-section li {
+            padding: 5px;
+        }
+
+        img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .player-list {
+            margin-top: 15px;
+        }
+    </style>
 </head>
 <body>
+
     <h1>Clan Leaderboard</h1>
     <div id="leaderboard"></div>
 
@@ -15,21 +59,22 @@
             .then(response => response.json())
             .then(data => {
                 let leaderboard = document.getElementById('leaderboard');
-                
+
+                // Iterate over the clans and display them
                 data.clans.forEach(clan => {
-                    // Create a section for each clan
                     let clanSection = document.createElement('section');
+                    clanSection.classList.add('clan-section');
                     clanSection.innerHTML = `
-                        <h2>${clan.name}</h2>
-                        <img src="${clan.logo}" alt="${clan.name} Logo">
-                        <p>Win %: ${clan['Win %']}</p>
-                        <p>Average Elo: ${clan['Average Elo']}</p>
-                        <p>Total Elo: ${clan['Total Elo']}</p>
-                        <p>Games Played: ${clan['Games Played']}</p>
-                        <p>Ranking: ${clan.Ranking}</p>
+                        <h2 style="color: ${clan.color};">${clan.name}</h2>
+                        <p><strong>Clan Color:</strong> ${clan.color}</p>
                         <h3>Players</h3>
-                        <ul>
-                            ${clan.Players.map(player => `<li>${player.name}: Elo = ${player.elo}, Wins = ${player.wins}, Games Played = ${player.games}</li>`).join('')}
+                        <ul class="player-list">
+                            ${data.players.filter(player => player.clan === clan.name)
+                                          .map(player => `
+                                            <li>
+                                                <strong>${player.name}</strong> (Rank: ${player.rank})<br>
+                                                Elo: ${player.elo}, Wins: ${player.wins}, Games: ${player.games}
+                                            </li>`).join('')}
                         </ul>
                     `;
                     leaderboard.appendChild(clanSection);
@@ -37,5 +82,6 @@
             })
             .catch(error => console.error('Error loading leaderboard data:', error));
     </script>
+
 </body>
 </html>
