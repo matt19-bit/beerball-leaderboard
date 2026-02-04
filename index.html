@@ -17,10 +17,10 @@
       position: relative;
       font-family: 'Arial', sans-serif;
       display: flex;
-      flex-direction: row; /* Make the card layout horizontal */
+      flex-direction: row;
     }
 
-    /* Left Side: Stats and Details */
+    /* Left Side: Player Info and Stats */
     .left-side {
       flex: 1;
       padding: 20px;
@@ -29,6 +29,7 @@
       gap: 10px;
     }
 
+    /* Player Name, Clan, and Team Name */
     .player-name {
       font-size: 24px;
       font-weight: bold;
@@ -50,117 +51,155 @@
       font-style: italic;
     }
 
+    /* Badges Section (Placeholder) */
+    .badges {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .badge {
+      width: 50px;
+      height: 50px;
+      background: rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-weight: bold;
+      color: white;
+    }
+
     /* Stats Section */
     .stats {
-      padding: 20px;
+      padding: 20px 0;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
+
     .stat {
       display: flex;
       justify-content: space-between;
     }
+
     .stat-label {
       font-size: 14px;
       opacity: 0.8;
     }
+
     .stat-value {
       font-size: 18px;
       font-weight: bold;
     }
 
-    /* Win Rate Bar */
+    /* Win % Bar */
     .winrate {
+      margin-top: 10px;
       padding: 10px;
       display: flex;
       flex-direction: column;
       gap: 5px;
     }
+
     .winrate-bar {
-      margin-top: 8px;
       height: 14px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.1);
       overflow: hidden;
     }
+
     .bar-fill {
       height: 100%;
       background: linear-gradient(90deg, #00d5c8, #ffb000);
     }
+
     .winrate-percentage {
       font-size: 14px;
       font-weight: bold;
       text-align: right;
     }
 
-    /* Custom Badges Section */
-    .badges {
-      padding: 10px;
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
-    .badge {
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      background: rgba(0, 0, 0, 0.35);
-    }
-
-    /* Right Side: Banner and Face */
+    /* Right Side: Rank Badge */
     .right-side {
-      flex: 1;
-      background-color: rgb(255, 22, 22); /* Default red color for "Champion" */
+      width: 100px;
+      background: #444;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       align-items: center;
+      justify-content: center;
       padding: 20px;
-      text-align: center;
+      gap: 10px;
     }
 
-    /* Banner and Face Section */
-    .banner-img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      opacity: 0.8;
-    }
-
-    .face-img {
-      width: 100px;
-      height: 100px;
+    .rank-badge {
+      width: 80px;
+      height: 80px;
+      background-color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 50%;
-      border: 4px solid white;
-      margin-top: 20px;
     }
 
-    /* Tier Colors */
-    .tier-champion { --tierA: #ffb000; --tierB: #b30000; --glow: rgba(255,140,0,.35); }
-    .tier-masters { --tierA: #9b4eeb; --tierB: #5f2c90; --glow: rgba(155,78,255,.3); }
-    .tier-diamond { --tierA: #e8fbff; --tierB: #4cc9ff; --glow: rgba(80,200,255,.3); }
-    .tier-platinum { --tierA: #00d5c8; --tierB: #0a6f77; --glow: rgba(0,213,200,.28); }
-    .tier-gold { --tierA: #ffd34d; --tierB: #8a5a00; --glow: rgba(255,211,77,.26); }
-    .tier-silver { --tierA: #cfd6dd; --tierB: #3a4652; --glow: rgba(207,214,221,.2); }
-    .tier-bronze { --tierA: #d59a6f; --tierB: #5a2f18; --glow: rgba(213,154,111,.2); }
+    .rank-badge img {
+      width: 50px;
+      height: 50px;
+    }
+
+    /* For the Diamond, Champion, etc. Badge */
+    .badge-diamond {
+      background-color: rgb(0, 51, 153);
+    }
+    .badge-champion {
+      background-color: rgb(255, 22, 22);
+    }
+    .badge-gold {
+      background-color: rgb(255, 211, 77);
+    }
+    .badge-silver {
+      background-color: rgb(191, 191, 191);
+    }
+    .badge-platinum {
+      background-color: rgb(0, 213, 200);
+    }
   </style>
 </head>
 
 <body>
-  <div class="player-card tier-champion">
-    <!-- Left Side: Stats and Player Info -->
+  <div class="player-card">
+    <!-- Left Side: Player Info and Stats -->
     <div class="left-side">
+      <!-- Player Info -->
       <div class="player-name">Matt Latour</div>
       <div class="clan-team">
         <span class="clan-name">Great Personality</span>
         <span class="team-name">Yin & Yang</span>
       </div>
 
+      <!-- Badges Section -->
+      <div class="badges">
+        <div class="badge">Badge 1</div>
+        <div class="badge">Badge 2</div>
+        <div class="badge">Badge 3</div>
+      </div>
+
+      <!-- Win Rate Bar -->
+      <div class="winrate">
+        <div class="winrate-bar">
+          <div class="bar-fill" style="width: 70.3%"></div>
+        </div>
+        <div class="winrate-percentage">70.3%</div>
+      </div>
+
+      <!-- Stats Section -->
       <div class="stats">
+        <div class="stat">
+          <span class="stat-label">Games Played</span>
+          <span class="stat-value">74</span>
+        </div>
         <div class="stat">
           <span class="stat-label">Wins</span>
           <span class="stat-value">52</span>
@@ -170,63 +209,19 @@
           <span class="stat-value">22</span>
         </div>
         <div class="stat">
-          <span class="stat-label">Games</span>
-          <span class="stat-value">74</span>
-        </div>
-        <div class="stat">
           <span class="stat-label">ELO</span>
           <span class="stat-value">2550</span>
         </div>
       </div>
-
-      <div class="winrate">
-        <div class="winrate-bar">
-          <div class="bar-fill" style="width: 70.3%"></div>
-        </div>
-        <div class="winrate-percentage">70.3%</div>
-      </div>
-
-      <div class="badges">
-        <div class="badge">Champion Badge</div>
-        <div class="badge">Godly Badge</div>
-      </div>
     </div>
 
-    <!-- Right Side: Banner and Player Face -->
+    <!-- Right Side: Rank Badge -->
     <div class="right-side">
-      <div class="banner-img">
-        <!-- Placeholder for Banner Art -->
-        <img src="https://via.placeholder.com/300x160" alt="Banner Art" class="banner-img"/>
-      </div>
-
-      <div class="face-img">
-        <!-- Placeholder for Player Face -->
-        <img src="https://via.placeholder.com/100" alt="Player Face" class="face-img"/>
-      </div>
-
-      <div class="rank-badge">
-        <!-- Placeholder for rank icon -->
+      <div class="rank-badge badge-champion">
         <img src="Icons/champion.jpg" alt="Rank Badge"/>
-        <div class="rank-number">#1</div>
       </div>
+      <div class="rank-number">#1</div>
     </div>
   </div>
-
-  <script>
-    // Dynamic Data Loading Example (mock)
-    fetch("leaderboard.json")
-      .then(r => r.json())
-      .then(d => {
-        const PLAYER = d.players[0]; // Just an example for now
-        document.querySelector('.player-name').textContent = PLAYER.name;
-        document.querySelector('.clan-name').textContent = PLAYER.clan;
-        document.querySelector('.team-name').textContent = PLAYER.team;
-        document.querySelector('.stat-value:nth-child(1)').textContent = PLAYER.wins;
-        document.querySelector('.stat-value:nth-child(2)').textContent = PLAYER.losses;
-        document.querySelector('.stat-value:nth-child(3)').textContent = PLAYER.games;
-        document.querySelector('.stat-value:nth-child(4)').textContent = PLAYER.elo;
-        document.querySelector('.bar-fill').style.width = `${(PLAYER.wins / PLAYER.games) * 100}%`;
-      });
-  </script>
 </body>
 </html>
