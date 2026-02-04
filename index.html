@@ -1,71 +1,41 @@
-# Load JSON data from your existing file
-$json = Get-Content -Path "C:\BBL\leaderboard.json" | ConvertFrom-Json
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+</head>
+<body>
+    <h1>Clan Leaderboard</h1>
+    <div id="leaderboard"></div>
 
-# Function to calculate clan stats
-function Get-ClanStats($clan) {
-    $totalElo = 0
-    $totalWins = 0
-    $totalGames = 0
-    $playerCount = $clan.players.Count
-
-    foreach ($player in $clan.players) {
-        $totalElo += $player.elo
-        $totalWins += $player.wins
-        $totalGames += $player.games
-    }
-
-    $winPercentage = if ($totalGames -gt 0) { 
-        [math]::round(($totalWins / $totalGames) * 100, 2) 
-    } else { 
-        0 
-    }
-
-    $averageElo = if ($playerCount -gt 0) { 
-        [math]::round($totalElo / $playerCount, 2) 
-    } else { 
-        0 
-    }
-
-    return @{
-        "Name" = $clan.name
-        "Logo" = $clan.logo
-        "Win %" = $winPercentage
-        "Average Elo" = $averageElo
-        "Total Elo" = $totalElo
-        "Games Played" = $totalGames
-        "Ranking" = $null  # To be calculated later
-        "Players" = $clan.players
-    }
-}
-
-# Get clan stats
-$clanStats = $json.clans | ForEach-Object { Get-ClanStats $_ }
-
-# Sort clans by total Elo (ranking)
-$sortedClans = $clanStats | Sort-Object -Property "Total Elo" -Descending
-
-# Assign rankings
-$ranking = 1
-foreach ($clan in $sortedClans) {
-    $clan.Ranking = $ranking
-    $ranking++
-}
-
-# Display the results
-$sortedClans | ForEach-Object {
-    Write-Host "`nClan: $($_.Name)"
-    Write-Host "Logo: $($_.Logo)"
-    Write-Host "Win %: $($_.['Win %'])"
-    Write-Host "Average Elo: $($_.['Average Elo'])"
-    Write-Host "Total Elo: $($_.['Total Elo'])"
-    Write-Host "Games Played: $($_.['Games Played'])"
-    Write-Host "Ranking: $($_.Ranking)"
-    Write-Host "Players in this Clan:"
-
-    # Display players
-    $_.Players | ForEach-Object {
-        Write-Host "  - $($_.name): Elo = $($_.elo), Wins = $($_.wins), Games Played = $($_.games)"
-    }
-
-    Write-Host "----------------------------------"
-}
+    <script>
+        // Fetch the leaderboard data from the JSON file
+        fetch('leaderboard.json')
+            .then(response => response.json())
+            .then(data => {
+                let leaderboard = document.getElementById('leaderboard');
+                
+                data.clans.forEach(clan => {
+                    // Create a section for each clan
+                    let clanSection = document.createElement('section');
+                    clanSection.innerHTML = `
+                        <h2>${clan.name}</h2>
+                        <img src="${clan.logo}" alt="${clan.name} Logo">
+                        <p>Win %: ${clan['Win %']}</p>
+                        <p>Average Elo: ${clan['Average Elo']}</p>
+                        <p>Total Elo: ${clan['Total Elo']}</p>
+                        <p>Games Played: ${clan['Games Played']}</p>
+                        <p>Ranking: ${clan.Ranking}</p>
+                        <h3>Players</h3>
+                        <ul>
+                            ${clan.Players.map(player => `<li>${player.name}: Elo = ${player.elo}, Wins = ${player.wins}, Games Played = ${player.games}</li>`).join('')}
+                        </ul>
+                    `;
+                    leaderboard.appendChild(clanSection);
+                });
+            })
+            .catch(error => console.error('Error loading leaderboard data:', error));
+    </script>
+</body>
+</html>
