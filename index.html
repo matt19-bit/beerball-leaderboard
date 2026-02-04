@@ -1,360 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Beerball Player Cards</title>
+# Load JSON data from your existing file
+$json = Get-Content -Path "path_to_your_existing_json_file.json" | ConvertFrom-Json
 
-<style>
-body{
-  background:#0f0f0f;
-  color:white;
-  font-family: Arial, sans-serif;
-  margin:20px;
+# Function to calculate clan stats
+function Get-ClanStats($clan) {
+    $totalElo = 0
+    $totalWins = 0
+    $totalGames = 0
+    $playerCount = $clan.players.Count
+
+    foreach ($player in $clan.players) {
+        $totalElo += $player.elo
+        $totalWins += $player.wins
+        $totalGames += $player.games
+    }
+
+    $winPercentage = if ($totalGames -gt 0) { [math]::round(($totalWins / $totalGames) * 100, 2) } else { 0 }
+    $averageElo = if ($playerCount -gt 0) { [math]::round($totalElo / $playerCount, 2) } else { 0 }
+
+    return @{
+        "Name" = $clan.name
+        "Logo" = $clan.logo
+        "Win %" = $winPercentage
+        "Average Elo" = $averageElo
+        "Total Elo" = $totalElo
+        "Games Played" = $totalGames
+        "Ranking" = $null  # To be calculated later
+        "Players" = $clan.players
+    }
 }
 
-/* ===================== NAV ===================== */
-nav{
-  display:flex;
-  justify-content:center;
-  gap:15px;
-  margin-bottom:20px;
-}
-.nav-button{
-  padding:10px 20px;
-  background:#444;
-  border:none;
-  color:white;
-  cursor:pointer;
-}
-.nav-button:hover{ background:#666; }
+# Get clan stats
+$clanStats = $json.clans | ForEach-Object { Get-ClanStats $_ }
 
-/* ===================== SECTIONS ===================== */
-.section{ display:none; }
-.section-title{
-  text-align:center;
-  letter-spacing:2px;
-  margin-bottom:18px;
+# Sort clans by total Elo (ranking)
+$sortedClans = $clanStats | Sort-Object -Property "Total Elo" -Descending
+
+# Assign rankings
+$ranking = 1
+foreach ($clan in $sortedClans) {
+    $clan.Ranking = $ranking
+    $ranking++
 }
 
-/* ===================== TOOLBAR ===================== */
-.cards-toolbar{
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-bottom:18px;
+# Display the results
+$sortedClans | ForEach-Object {
+    Write-Host "`nClan: $($_.Name)"
+    Write-Host "Logo: $($_.Logo)"
+    Write-Host "Win %: $($_.['Win %'])"
+    Write-Host "Average Elo: $($_.['Average Elo'])"
+    Write-Host "Total Elo: $($_.['Total Elo'])"
+    Write-Host "Games Played: $($_.['Games Played'])"
+    Write-Host "Ranking: $($_.Ranking)"
+    Write-Host "Players in this Clan:"
+
+    # Display players
+    $_.Players | ForEach-Object {
+        Write-Host "  - $($_.name): Elo = $($_.elo), Wins = $($_.wins), Games Played = $($_.games)"
+    }
+
+    Write-Host "----------------------------------"
 }
-.cards-search, .cards-sort{
-  background:#141414;
-  color:white;
-  border:1px solid #2a2a2a;
-  padding:10px 12px;
-  border-radius:10px;
-}
-
-/* ===================== GRID ===================== */
-.cards-grid{
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
-  gap:18px;
-}
-
-/* ===================== CARD BASE ===================== */
-.player-card{
-  position:relative;
-  background:linear-gradient(180deg,#1b1b1b,#0f0f0f);
-  border-radius:18px;
-  overflow:hidden;
-  cursor:pointer;
-  min-height:540px;
-  transition:.15s;
-  --tierA:#555;
-  --tierB:#111;
-  --glow:rgba(255,255,255,.15);
-  --flash:rgba(255,255,255,0);
-}
-.player-card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 18px 45px rgba(0,0,0,.6);
-}
-.frame-glow{
-  position:absolute;
-  inset:0;
-  border-radius:18px;
-  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 0 28px var(--glow);
-  pointer-events:none;
-}
-
-/* ===================== TIERS ===================== */
-.tier-champion{ --tierA:#ffb000; --tierB:#b30000; --glow:rgba(255,140,0,.35); }
-.tier-diamond{ --tierA:#e8fbff; --tierB:#4cc9ff; --glow:rgba(80,200,255,.3); }
-.tier-platinum{ --tierA:#00d5c8; --tierB:#0a6f77; --glow:rgba(0,213,200,.28); }
-.tier-gold{ --tierA:#ffd34d; --tierB:#8a5a00; --glow:rgba(255,211,77,.26); }
-.tier-silver{ --tierA:#cfd6dd; --tierB:#3a4652; --glow:rgba(207,214,221,.2); }
-
-/* ===================== HEADER ===================== */
-.card-header{
-  padding:16px;
-  background:linear-gradient(135deg,var(--tierB),var(--tierA));
-}
-.card-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.rank{ font-size:28px; font-weight:900; }
-.tier{ letter-spacing:3px; font-weight:900; }
-.crown{
-  background:rgba(0,0,0,.35);
-  padding:10px;
-  border-radius:10px;
-}
-
-/* ===================== IDENTITY ===================== */
-.card-id{
-  text-align:center;
-  padding:14px;
-}
-.player-name{
-  font-size:34px;
-  font-weight:900;
-  letter-spacing:2px;
-}
-.clan{ font-weight:800; margin-top:8px; }
-.team{ opacity:.85; }
-
-/* ===================== BADGES ===================== */
-.badges{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  margin:12px 0;
-}
-.badge{
-  padding:6px 12px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:1px;
-  border:1px solid rgba(255,255,255,.2);
-  background:rgba(0,0,0,.35);
-}
-.badge.flash{ box-shadow:0 0 12px var(--flash); }
-.badge.leader{ background:#6a00ff; }
-.badge.bounty{ background:#b30000; }
-
-/* ===================== STATS ===================== */
-.stats{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  padding:0 16px;
-}
-.stat{
-  background:rgba(255,255,255,.05);
-  border-radius:14px;
-  padding:12px;
-}
-.stat-label{ font-size:12px; letter-spacing:2px; }
-.stat-val{ font-size:36px; font-weight:900; }
-
-/* ===================== WINRATE ===================== */
-.winrate{ padding:16px; }
-.bar{
-  height:14px;
-  background:rgba(255,255,255,.1);
-  border-radius:999px;
-  overflow:hidden;
-}
-.fill{
-  height:100%;
-  background:linear-gradient(90deg,var(--tierB),var(--tierA));
-}
-
-/* ===================== FLASH ===================== */
-.flash-on .frame-glow{
-  animation:pulse 1.6s infinite;
-}
-@keyframes pulse{
-  50%{ filter:brightness(1.2); }
-}
-
-/* ===================== MODAL ===================== */
-.modal{ position:fixed; inset:0; display:none; z-index:999; }
-.modal-bg{
-  position:absolute; inset:0; background:rgba(0,0,0,.7);
-}
-.modal-box{
-  position:relative;
-  margin:5vh auto;
-  width:min(960px,94vw);
-}
-.close{
-  position:absolute;
-  top:10px; right:10px;
-  background:#111;
-  color:white;
-  border:none;
-  padding:8px 12px;
-  cursor:pointer;
-}
-</style>
-</head>
-
-<body>
-
-<nav>
-  <button class="nav-button" onclick="showSection('cards')">Player Cards</button>
-</nav>
-
-<section id="cards" class="section">
-  <h2 class="section-title">PLAYER CARDS</h2>
-
-  <div class="cards-toolbar">
-    <input id="search" class="cards-search" placeholder="Search player">
-    <select id="sort" class="cards-sort">
-      <option value="rank">Rank</option>
-      <option value="elo">ELO</option>
-      <option value="wins">Wins</option>
-      <option value="winrate">Win %</option>
-    </select>
-  </div>
-
-  <div id="grid" class="cards-grid"></div>
-</section>
-
-<div id="modal" class="modal">
-  <div class="modal-bg" onclick="closeModal()"></div>
-  <div class="modal-box">
-    <button class="close" onclick="closeModal()">✕</button>
-    <div id="modalContent"></div>
-  </div>
-</div>
-
-<script>
-function showSection(id){
-  document.querySelectorAll('.section').forEach(s=>s.style.display='none');
-  document.getElementById(id).style.display='block';
-}
-showSection('cards');
-
-function tierClass(t){
-  if(!t) return 'tier-silver';
-  t=t.toLowerCase();
-  if(t==='crimson') return 'tier-champion';
-  if(t.includes('champ')) return 'tier-champion';
-  if(t.includes('diamond')) return 'tier-diamond';
-  if(t.includes('plat')) return 'tier-platinum';
-  if(t.includes('gold')) return 'tier-gold';
-  return 'tier-silver';
-}
-
-function winrate(p){
-  return p.games>0 ? ((p.wins/p.games)*100).toFixed(1) : "0.0";
-}
-
-function cardHTML(p) {
-  const badges = [];
-  if (p.isClanLeader) badges.push(`<div class="badge leader">CLAN LEADER</div>`);
-  if (p.hasBounty) badges.push(`<div class="badge bounty">BOUNTY</div>`);
-  if (p.hasFlash) badges.push(`<div class="badge flash">⚡ FLASH</div>`);
-
-  // Determine rank badge image based on player's tier
-  let rankBadge = '';
-  if (p.tier === 'Crimson' || p.tier.includes('champ')) {
-    rankBadge = '<img src="Icons/champion.jpg" alt="Champion Badge" class="rank-badge" />';
-  } else if (p.tier === 'Diamond') {
-    rankBadge = '<img src="Icons/diamond.jpg" alt="Diamond Badge" class="rank-badge" />';
-  } else if (p.tier === 'Platinum') {
-    rankBadge = '<img src="Icons/platinum.jpg" alt="Platinum Badge" class="rank-badge" />';
-  } else if (p.tier === 'Gold') {
-    rankBadge = '<img src="Icons/gold.jpg" alt="Gold Badge" class="rank-badge" />';
-  } else if (p.tier === 'Silver') {
-    rankBadge = '<img src="Icons/silver.jpg" alt="Silver Badge" class="rank-badge" />';
-  } else if (p.tier === 'Bronze') {
-    rankBadge = '<img src="Icons/bronze.jpg" alt="Bronze Badge" class="rank-badge" />';
-  }
-
-  return `
-  <div class="player-card ${tierClass(p.tier)} ${p.hasFlash ? 'flash-on' : ''}"
-       style="--flash:${p.clanColor || 'rgba(255,255,255,.4)'}"
-       onclick="openModal(${p.rank})">
-    <div class="frame-glow"></div>
-
-    <div class="card-header">
-      <div class="card-top">
-        <div class="rank">#${p.rank}</div>
-        <div class="tier">${p.tier === 'Crimson' ? 'CHAMPION' : p.tier}</div>
-        <div class="crown">👑</div>
-      </div>
-      <!-- Add rank badge here -->
-      <div class="rank-badge-container">${rankBadge}</div>
-    </div>
-
-    <div class="card-id">
-      <div class="player-name">${p.name}</div>
-      <div class="clan" style="color:${p.clanColor || 'white'}">${p.clan || ''}</div>
-      <div class="team" style="color:${p.teamColor || 'white'}">${p.team || ''}</div>
-    </div>
-
-    <div class="badges">${badges.join('')}</div>
-
-    <div class="stats">
-      <div class="stat"><div class="stat-label">ELO</div><div class="stat-val">${p.elo}</div></div>
-      <div class="stat"><div class="stat-label">GAMES</div><div class="stat-val">${p.games}</div></div>
-      <div class="stat"><div class="stat-label">WINS</div><div class="stat-val">${p.wins}</div></div>
-      <div class="stat"><div class="stat-label">LOSSES</div><div class="stat-val">${p.losses}</div></div>
-    </div>
-
-    <div class="winrate">
-      <div class="bar"><div class="fill" style="width:${winrate(p)}%"></div></div>
-      <div style="text-align:right;font-weight:900">${winrate(p)}%</div>
-    </div>
-  </div>`;
-}
-
-
-let PLAYERS=[];
-
-function render(){
-  const q=document.getElementById('search').value.toLowerCase();
-  const sort=document.getElementById('sort').value;
-
-  let list=[...PLAYERS].filter(p=>p.name.toLowerCase().includes(q));
-
-  list.sort((a,b)=>{
-    if(sort==='elo') return b.elo-a.elo;
-    if(sort==='wins') return b.wins-a.wins;
-    if(sort==='winrate') return (b.wins/b.games)-(a.wins/a.games);
-    return a.rank-b.rank;
-  });
-
-  document.getElementById('grid').innerHTML=list.map(cardHTML).join('');
-}
-
-function openModal(rank){
-  const p=PLAYERS.find(x=>x.rank===rank);
-  document.getElementById('modalContent').innerHTML=cardHTML(p);
-  document.getElementById('modal').style.display='block';
-}
-function closeModal(){
-  document.getElementById('modal').style.display='none';
-}
-
-document.getElementById('search').oninput=render;
-document.getElementById('sort').onchange=render;
-
-fetch("leaderboard.json")
-  .then(r=>r.json())
-  .then(d=>{
-    PLAYERS=d.players;
-    PLAYERS.forEach(p=>{
-      if(Array.isArray(p.hasFlash)) p.hasFlash=false;
-    });
-    render();
-  });
-</script>
-
-</body>
-</html>
- 
