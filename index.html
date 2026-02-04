@@ -64,9 +64,13 @@
                 data.clans.forEach(clan => {
                     let clanSection = document.createElement('section');
                     clanSection.classList.add('clan-section');
+
+                    // Construct the clan logo path and remove the "Clan Color" part
+                    let logoPath = `Icons/${clan.name.replace(/\s+/g, '')}.png`; // Assuming file names match clan names
+
                     clanSection.innerHTML = `
-                        <h2 style="color: ${clan.color};">${clan.name}</h2>
-                        <p><strong>Clan Color:</strong> ${clan.color}</p>
+                        <h2>${clan.name}</h2>
+                        <img src="${logoPath}" alt="${clan.name} Logo">
                         <h3>Players</h3>
                         <ul class="player-list">
                             ${data.players.filter(player => player.clan === clan.name)
