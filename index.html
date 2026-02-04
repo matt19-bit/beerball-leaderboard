@@ -40,6 +40,7 @@
             margin-top: 15px;
             padding: 0;
             list-style-type: none;
+            display: none; /* Initially hide players */
         }
 
         .player-list li {
@@ -58,6 +59,27 @@
             height: 20px;
             vertical-align: middle;
             margin-left: 10px;
+        }
+
+        /* Style for the dropdown arrow */
+        .dropdown-button {
+            cursor: pointer;
+            padding: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: transparent;
+            border: none;
+            text-align: left;
+        }
+
+        .dropdown-button:after {
+            content: '\25BC'; /* Down arrow */
+            margin-left: 10px;
+        }
+
+        /* Rotate the arrow when the dropdown is open */
+        .dropdown-button.open:after {
+            content: '\25B2'; /* Up arrow */
         }
     </style>
 </head>
@@ -82,18 +104,18 @@
                 };
 
                 // Rank badge filenames based on rank
-               const rankBadges = {
-  		  "Champion": "champion.png",
-   		  "Master": "master.png",
- 	          "Diamond I": "diamond.png",
-  		  "Diamond II": "diamond.png",
- 	          "Diamond III": "diamond.png",
-    		  "Platinum I": "platinum.png",
-    		  "Platinum II": "platinum.png",
-    		  "Gold II": "gold.png",
-    		  "Gold III": "gold.png",
-    		  "Silver I": "silver.png",
-   		  "Silver II": "silver.png" 
+                const rankBadges = {
+                    "Champion": "champion.png",
+                    "Master": "master.png",
+                    "Diamond I": "diamond.png",
+                    "Diamond II": "diamond.png",
+                    "Diamond III": "diamond.png",
+                    "Platinum I": "platinum.png",
+                    "Platinum II": "platinum.png",
+                    "Gold II": "gold.png",
+                    "Gold III": "gold.png",
+                    "Silver I": "silver.png",
+                    "Silver II": "silver.png" 
                 };
 
                 // Iterate over the clans and display them
@@ -109,7 +131,7 @@
                         <h2 style="color: ${clan.color};">
                             <img class="clan-logo" src="${logoPath}" alt="${clan.name} Logo">${clan.name}
                         </h2>
-                        <h3>Players</h3>
+                        <button class="dropdown-button" onclick="toggleDropdown(event)">Players</button>
                         <ul class="player-list">
                             ${data.players.filter(player => player.clan === clan.name)
                                           .map(player => `
@@ -123,6 +145,15 @@
                 });
             })
             .catch(error => console.error('Error loading leaderboard data:', error));
+
+        // Function to toggle the visibility of the player list
+        function toggleDropdown(event) {
+            const button = event.target;
+            const playerList = button.nextElementSibling; // The <ul> element
+
+            playerList.style.display = playerList.style.display === 'none' || playerList.style.display === '' ? 'block' : 'none';
+            button.classList.toggle('open'); // Toggle the dropdown arrow
+        }
     </script>
 
 </body>
