@@ -67,60 +67,64 @@
     <h1>Clan Leaderboard</h1>
     <div id="leaderboard"></div>
 
-    <script>
-        // Fetch the leaderboard data from the JSON file
-        fetch('leaderboard.json')
-            .then(response => response.json())
-            .then(data => {
-                let leaderboard = document.getElementById('leaderboard');
+   <script>
+    // Fetch the leaderboard data from the JSON file
+    fetch('leaderboard.json')
+        .then(response => response.json())
+        .then(data => {
+            console.log("Data fetched:", data); // Log the fetched data to verify
+            let leaderboard = document.getElementById('leaderboard');
 
-                // Clan logo filenames based on clan names
-                const clanLogos = {
-                    "Great Personality": "Great Personality Logo.png",
-                    "WANGHAF": "WANGHAF Logo.png",
-                    "Beer Pressure": "Beer Pressure Logo.png",
-                    "Six Eyes": "Six Eyes Logo.png"
-                };
+            // Clan logo filenames based on clan names
+            const clanLogos = {
+                "Great Personality": "Great Personality Logo.png",
+                "WANGHAF": "WANGHAF Logo.png",
+                "Beer Pressure": "Beer Pressure Logo.png",
+                "Six Eyes": "Six Eyes Logo.png"
+            };
 
-                // Rank badge filenames based on rank
-                const rankBadges = {
-                    "Champion": "champion.jpg",
-                    "Master": "master.jpg",
-                    "Diamond I": "diamond.jpg",
-                    "Diamond II": "diamond.jpg",
-                    "Diamond III": "diamond.jpg",
-                    "Platinum I": "platinum.jpg",
-                    "Platinum II": "platinum.jpg",
-                    "Gold II": "gold.jpg",
-                    "Gold III": "gold.jpg",
-                    "Silver I": "silver.jpg"
-                };
+            // Rank badge filenames based on rank
+            const rankBadges = {
+                "Champion": "champion.jpg",
+                "Master": "master.jpg",
+                "Diamond I": "diamond.jpg",
+                "Diamond II": "diamond.jpg",
+                "Diamond III": "diamond.jpg",
+                "Platinum I": "platinum.jpg",
+                "Platinum II": "platinum.jpg",
+                "Gold II": "gold.jpg",
+                "Gold III": "gold.jpg",
+                "Silver I": "silver.jpg"
+            };
 
-                // Iterate over the clans and display them
-                data.clans.forEach(clan => {
-                    let clanSection = document.createElement('section');
-                    clanSection.classList.add('clan-section');
+            // Iterate over the clans and display them
+            data.clans.forEach(clan => {
+                console.log(`Displaying clan: ${clan.name}`); // Log each clan being processed
+                let clanSection = document.createElement('section');
+                clanSection.classList.add('clan-section');
 
-                    // Construct the logo path
-                    let logoPath = `Icons/${clanLogos[clan.name]}`;
+                // Construct the logo path
+                let logoPath = `Icons/${clanLogos[clan.name]}`;
 
-                    clanSection.innerHTML = `
-                        <h2><img class="clan-logo" src="${logoPath}" alt="${clan.name} Logo">${clan.name}</h2>
-                        <h3>Players</h3>
-                        <ul class="player-list">
-                            ${data.players.filter(player => player.clan === clan.name)
-                                          .map(player => `
-                                            <li style="color: ${clan.color};">
-                                                <img class="rank-badge" src="Icons/${rankBadges[player.tier]}" alt="${player.tier} Badge">
-                                                <span class="player-name">${player.name}</span>
-                                            </li>`).join('')}
-                        </ul>
-                    `;
-                    leaderboard.appendChild(clanSection);
-                });
-            })
-            .catch(error => console.error('Error loading leaderboard data:', error));
-    </script>
+                clanSection.innerHTML = `
+                    <h2><img class="clan-logo" src="${logoPath}" alt="${clan.name} Logo">${clan.name}</h2>
+                    <h3>Players</h3>
+                    <ul class="player-list">
+                        ${data.players.filter(player => player.clan === clan.name)
+                                      .map(player => `
+                                        <li style="color: ${clan.color};">
+                                            <img class="rank-badge" src="Icons/${rankBadges[player.tier]}" alt="${player.tier} Badge">
+                                            <span class="player-name">${player.name}</span>
+                                        </li>`).join('')}
+                    </ul>
+                `;
+                leaderboard.appendChild(clanSection);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading leaderboard data:', error); // Log errors to the console
+        });
+</script>
 
 </body>
 </html>
